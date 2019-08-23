@@ -163,7 +163,7 @@ def stft(x, segment_length, segment_length_padded, shift_length,
 
 
 
-def istft(x_stft, segment_length, start_list, stop_list,
+def istft(x_stft, segment_length, segment_length_padded, start_list, stop_list,
                     original_size, window_function, p):
     """Inverse short-time Fourier transform. Convert (N+1)-dimensional array
     to N-dimensional array
@@ -182,6 +182,8 @@ def istft(x_stft, segment_length, start_list, stop_list,
         or equal to zero are passed to this function.
     segment_length : int
         length of extracted segments
+    segment_length_padded : int
+        length of extracted segments with zero padding
     start_list : list of ints
     stop_list : list of ints
     original_size : shape 
@@ -199,7 +201,8 @@ def istft(x_stft, segment_length, start_list, stop_list,
     """
 
     # take inverse short-time Fourier transform
-    x_segments = np.fft.irfft(x_stft, n=segment_length, axis=0)
+    x_segments = np.fft.irfft(x_stft, n=segment_length_padded, axis=0)
+    x_segments = x_segments[0:segment_length]
 
     # generate window vector
     window_vector = window_nonzero(window_function, segment_length)

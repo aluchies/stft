@@ -147,7 +147,8 @@ class TestCode(unittest.TestCase):
         p = 1
         x_stft, start_list, stop_list = stft(x, segment_length,
             segment_length_padded, shift_length, window_function)
-        x_out = istft(x_stft, segment_length, start_list, stop_list,
+        x_out = istft(x_stft, segment_length, segment_length_padded,
+            start_list, stop_list,
             original_size, window_function, p)
         self.assertTrue( np.allclose(x_out, x))
 
@@ -160,7 +161,8 @@ class TestCode(unittest.TestCase):
         p = 1
         x_stft, start_list, stop_list = stft(x, segment_length,
             segment_length_padded, shift_length, window_function)
-        x_out = istft(x_stft, segment_length, start_list, stop_list,
+        x_out = istft(x_stft, segment_length, segment_length_padded,
+            start_list, stop_list,
             original_size, window_function, p)
         self.assertTrue( np.allclose(x_out, x))
 
@@ -174,7 +176,8 @@ class TestCode(unittest.TestCase):
         p = 1
         x_stft, start_list, stop_list = stft(x, segment_length,
             segment_length_padded, shift_length, window_function)
-        x_out = istft(x_stft, segment_length, start_list, stop_list,
+        x_out = istft(x_stft, segment_length, segment_length_padded,
+            start_list, stop_list,
             original_size, window_function, p)
         self.assertTrue( np.allclose(x_out, x))
 
@@ -187,7 +190,8 @@ class TestCode(unittest.TestCase):
         p = 1
         x_stft, start_list, stop_list = stft(x, segment_length,
             segment_length_padded, shift_length, window_function)
-        x_out = istft(x_stft, segment_length, start_list, stop_list,
+        x_out = istft(x_stft, segment_length, segment_length_padded,
+            start_list, stop_list,
             original_size, window_function, p)
         self.assertTrue( np.allclose(x_out, x))
 
@@ -200,7 +204,8 @@ class TestCode(unittest.TestCase):
         p = 2
         x_stft, start_list, stop_list = stft(x, segment_length,
             segment_length_padded, shift_length, window_function)
-        x_out = istft(x_stft, segment_length, start_list, stop_list,
+        x_out = istft(x_stft, segment_length, segment_length_padded,
+            start_list, stop_list,
             original_size, window_function, p)
         self.assertTrue( np.allclose(x_out, x))
 
@@ -213,7 +218,8 @@ class TestCode(unittest.TestCase):
         p = 2
         x_stft, start_list, stop_list = stft(x, segment_length,
             segment_length_padded, shift_length, window_function)
-        x_out = istft(x_stft, segment_length, start_list, stop_list,
+        x_out = istft(x_stft, segment_length, segment_length_padded,
+            start_list, stop_list,
             original_size, window_function, p)
         self.assertTrue( np.allclose(x_out, x))
 
@@ -227,7 +233,8 @@ class TestCode(unittest.TestCase):
         p = 2
         x_stft, start_list, stop_list = stft(x, segment_length,
             segment_length_padded, shift_length, window_function)
-        x_out = istft(x_stft, segment_length, start_list, stop_list,
+        x_out = istft(x_stft, segment_length, segment_length_padded,
+            start_list, stop_list,
             original_size, window_function, p)
         self.assertTrue( np.allclose(x_out, x))
 
@@ -240,7 +247,8 @@ class TestCode(unittest.TestCase):
         p = 2
         x_stft, start_list, stop_list = stft(x, segment_length,
             segment_length_padded, shift_length, window_function)
-        x_out = istft(x_stft, segment_length, start_list, stop_list,
+        x_out = istft(x_stft, segment_length, segment_length_padded,
+            start_list, stop_list,
             original_size, window_function, p)
         self.assertTrue( np.allclose(x_out, x))
 
@@ -253,9 +261,25 @@ class TestCode(unittest.TestCase):
         p = 2
         x_stft, start_list, stop_list = stft(x, segment_length,
             segment_length_padded, shift_length, window_function)
-        x_out = istft(x_stft, segment_length, start_list, stop_list,
+        x_out = istft(x_stft, segment_length, segment_length_padded,
+            start_list, stop_list,
             original_size, window_function, p)
         self.assertTrue( np.allclose(x_out, x))
+
+        x = np.ones(16)
+        segment_length = 4
+        shift_length = 2
+        segment_length_padded = 7
+        window_function = boxcar
+        original_size = x.shape
+        p = 1
+        x_stft, start_list, stop_list = stft(x, segment_length,
+            segment_length_padded, shift_length, window_function)
+        x_out = istft(x_stft, segment_length, segment_length_padded, 
+            start_list, stop_list,
+            original_size, window_function, p)
+        self.assertTrue( np.allclose(x_out, x))
+
 
 
 
