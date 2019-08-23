@@ -21,13 +21,12 @@ def window_nonzero(window_function, segment_length):
     window_vector : 1d array
     
     """
-    
+
     zero_exist = 1
     zero_count = 0
     
     window_vector = window_function(segment_length+zero_count)
 
-    
     while zero_exist:
             
         start = int( zero_count / 2 )
