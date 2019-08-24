@@ -228,7 +228,7 @@ def istft(x_stft, segment_length, segment_length_padded, start_list, stop_list,
 
     
     # create output array
-    x = np.zeros(original_size, dtype=np.complex)
+    x = np.zeros(original_size)
     # overlap and add segments
     for i, (start, stop) in enumerate( zip(start_list, stop_list) ):
         x[start:stop,...] += x_segments[:, i,...]
