@@ -1,6 +1,5 @@
 import numpy as np
 from itertools import product
-from scipy.signal.windows import boxcar
 
 def window_nonzero(window_function, segment_length):
     """Generate a window vector: window will have no zeros at beginning or end
@@ -55,8 +54,9 @@ def create_overlapping_segments(x, segment_length, shift_length):
         Segments extracted along the first dimension.
     segment_length : int
         length of extracted segments
-    shift_length : 
-        shift length 1 <= S <= N allows overlapping segments
+    shift_length : int
+        shift length 1 <= shift_length <= segment_length allows overlapping
+        segments
     
     Returns
     -------
@@ -69,13 +69,13 @@ def create_overlapping_segments(x, segment_length, shift_length):
     
     """
 
-    # input argument checking
+    # input argument checks
     if type(x) is not np.ndarray:
         raise ValueError("x is not numpy array")
     if segment_length > x.shape[0]:
         raise ValueError("segment_length is greater than x.shape[0]")
     if shift_length <= 0:
-        raise ValueError("S <= 0")
+        raise ValueError("shift_length <= 0")
     if shift_length > segment_length:
         raise ValueError("shift_length > segment_length")
 
@@ -124,7 +124,8 @@ def stft(x, segment_length, segment_length_padded, shift_length,
     segment_length_padded : int
         segment length with zero padding
     shift_length : int
-        shift length 1 <= S <= N allows overlapping segments
+        shift length 1 <= shift_length <= segment_length allows overlapping
+        segments
     window_function : scipy.signal.window object
         window from scipy.signal.windows
     
@@ -132,11 +133,19 @@ def stft(x, segment_length, segment_length_padded, shift_length,
     -------
     x_stft : complex ndarray
         complex array representing short-time Fourier transform of x. Only
-        the positive frequencies are returned.
+        the positive frequencies are returned because x assumed to be real.
 
     """
 
-    # if
+    # input argument checks
+    if type(x) is not np.ndarray:
+        raise ValueError("x is not numpy array")
+    if segment_length > x.shape[0]:
+        raise ValueError("segment_length is greater than x.shape[0]")
+    if shift_length <= 0:
+        raise ValueError("shift_length <= 0")
+    if shift_length > segment_length:
+        raise ValueError("shift_length > segment_length")
     if segment_length_padded < segment_length:
         raise ValueError("segment_length_padded < segment_length")
 
@@ -216,7 +225,7 @@ def istft(x_stft, segment_length, segment_length_padded, start_list, stop_list,
     # apply window to segments
     x_segments = window_array * x_segments
 
-    # find overlap and add vector for windowing operation
+    # find overlap-and-add vector for windowing operation
     # This is Dp in step 5 in Table 1 in source [1].
     window_overlap_add = np.zeros(original_size[0])
     number_segments = len(start_list)
@@ -226,7 +235,6 @@ def istft(x_stft, segment_length, segment_length_padded, start_list, stop_list,
     # invert this vector
     window_overlap_add = ( window_overlap_add ) ** -1
 
-    
     # create output array
     x = np.zeros(original_size)
     # overlap and add segments
