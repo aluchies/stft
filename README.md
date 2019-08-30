@@ -14,4 +14,4 @@ This code is based on the algorithm proposed in [1], the reader is referred ther
 
 [3] B Byram et al, "A model and regularization scheme for ultrasonic beamforming clutter reduction, " IEEE UFFC, 62, 11, 2015.
 
-[4] A Luchies et al, "Deep nerual networks for ultrasound beamforming," IEEE TMI, 37, 9, 2018.
+[4] A Luchies et al, "Deep neural networks for ultrasound beamforming," IEEE TMI, 37, 9, 2018.
