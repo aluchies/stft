@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import unittest
 from stft import window_nonzero, create_overlapping_segments, stft, istft
 from stft import istft
