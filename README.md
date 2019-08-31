@@ -4,7 +4,7 @@ Short-time Fourier transform (STFT) and inverse short-time Fourier transform (IS
 
 ## Overview
 
-This code is based on the algorithm proposed in [1], the reader is referred there for theoretical details. The features of this code include
+This module is based on the algorithm proposed in [1]. The features of this module include
 
 * the input data is assumed to be real (use rfft/irfft instead of fft/ifft)
 * it can be applied to an n-d array
