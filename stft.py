@@ -2,13 +2,13 @@ import numpy as np
 from itertools import product
 
 def window_nonzero(window_function, segment_length):
-    """Generate a window vector: window will have no zeros at beginning or end
+    """Generate a window vector such that there will be no zeros at the 
+    beginning or end of the vector
     
-    This function creates a vector of values for a specified window.
-    This function increases window length until the returned window
-    contains no zeros and has length N. This function should not be used
-    if the chosen window has zeros on the interior that are surrounded 
-    by non-zero values (eg, [1, 1, 0, 1, 1]).
+    This function creates a vector of values for a specified window. It 
+    will increase the window length until the returned window
+    contains no zeros and then truncate the window so that it still has
+    length N.
     
     Parameters
     ----------
@@ -18,6 +18,12 @@ def window_nonzero(window_function, segment_length):
     Returns
     -------
     window_vector : 1d array
+
+    Notes
+    -----
+    This function should not be used if the selected window has zeros on
+    the interior that are surrounded by non-zero values
+    (eg, [1, 1, 0, 1, 1]).
     
     """
 
@@ -44,9 +50,10 @@ def window_nonzero(window_function, segment_length):
 
 
 def create_overlapping_segments(x, segment_length, shift_length):
-    """
-    Split into overlapping subarrays: convert an N-dimensional array into an
-    (N+1)-dimensional array
+    """Split signal along the first dimension into overlapping subarrays
+
+    This functio will convert an N-dimensional array into an
+    (N+1)-dimensional array.
 
     Parameters
     ----------
@@ -55,8 +62,9 @@ def create_overlapping_segments(x, segment_length, shift_length):
     segment_length : int
         length of extracted segments
     shift_length : int
-        shift length 1 <= shift_length <= segment_length allows overlapping
-        segments
+        shift length 1 <= shift_length <= segment_length 
+        This parmaeter controls how much overlap there is between segments
+        Set it to ``segment_length`` for no overlap
     
     Returns
     -------
@@ -97,7 +105,8 @@ def create_overlapping_segments(x, segment_length, shift_length):
         start_list = np.append(start_list, x.shape[0] - segment_length)
 
     # Create list of subarrays using a list comprehension
-    x_segments = [ x[start:stop,...] for start, stop in zip(start_list, stop_list)]
+    x_segments = [ x[start:stop,...] for start, stop in zip(start_list,
+        stop_list)]
 
     # Now stack the subarrays
     x_segments = np.stack(x_segments, axis=1)
@@ -107,13 +116,12 @@ def create_overlapping_segments(x, segment_length, shift_length):
 
 def stft(x, segment_length, segment_length_padded, shift_length,
         window_function):
-    """
-    Short-time Fourier transform: convert an N-dimensional array into an
-    (N+1)-dimensional array
+    """Transfer signal from time domain to frequency domain.
     
     The short-time Fourier transform (STFT) breaks an N-dimensional array
-    along the first axis into disjoint chunks (possibly overlapping) and runs 
-    a 1D FFT (Fast Fourier Transform) on each chunk.
+    along the first axis into disjoint chunks (possibly overlapping) and 
+    take a 1D FFT (Fast Fourier Transform) of each chunk along the first
+    dimension.
     
     Parameters
     ----------
@@ -132,8 +140,22 @@ def stft(x, segment_length, segment_length_padded, shift_length,
     Returns
     -------
     x_stft : complex ndarray
-        complex array representing short-time Fourier transform of x. Only
-        the positive frequencies are returned because x assumed to be real.
+        complex array representing short-time Fourier transform of ``x``.
+        Only the positive frequencies are returned because ``x`` assumed
+        to be real. The shape is (segment_length, number segments, ...)
+
+    Examples
+    --------
+    >>> x = np.ones(16)
+    >>> segment_length = 4
+    >>> shift_length = 2
+    >>> segment_length_padded = 4
+    >>> from scipy.signal.windows import boxcar
+    >>> window_function = boxcar
+    >>> original_size = x.shape
+    >>> p = 1
+    >>> x_stft, start_list, stop_list = stft(x, segment_length,
+    ...     segment_length_padded, shift_length, window_function)
 
     """
 
@@ -173,38 +195,59 @@ def stft(x, segment_length, segment_length_padded, shift_length,
 
 def istft(x_stft, segment_length, segment_length_padded, start_list, stop_list,
                     original_size, window_function, p):
-    """Inverse short-time Fourier transform. Convert (N+1)-dimensional array
-    to N-dimensional array
-
-    The inverse short-time Fourier transform (ISTFT) reconstructs an array
-    from its STFT frequency domain representation. This function implements
-    the the p-istft algorithm described in [1]. In particular, see Table 1.
-
-    [1] B. Yang, "A study of inverse short-time Fourier transform,"
-    in Proc. of ICASSP, 2008.
+    """Transfer signal from the frequency domain to the time domain.
+    
+    The inverse short-time Fourier transform (ISTFT) reconstructs a signal
+    from its STFT frequency domain representation. It does so by converting
+    an (N+1)-dimensional array to N-dimensional array. 
 
     Parameters
     ----------
     x_stft : complex ndarray
-        The sequence is assumed to be real. Only the frequencies greater than
-        or equal to zero are passed to this function.
+        The sequence is assumed to be real. Only the frequencies greater
+        than or equal to zero should be passed to this function.
     segment_length : int
         length of extracted segments
     segment_length_padded : int
         length of extracted segments with zero padding
     start_list : list of ints
     stop_list : list of ints
-    original_size : shape 
+    original_size : tuple containing shape of the original signal 
     window_function : scipy.signal.window object
         window from scipy.signal.windows
     p : int
-        If p == 1, this will result in overlap and add.
-        If p == 2, this will be the LS algorithm described in [1].
+        ``p`` determines the segment re-combination algorithm.
+        Set to 1 for overlap-and-add algorithm
+        Set to 2 for the LS algorithm described in [1].
     
     Returns
     -------
     x : array_like
-        x reconstruction after istft
+        Signal reconstruction after istft
+
+    Notes
+    -----
+    This function implements the p-istft algorithm described in [1].
+
+    References
+    ----------
+    [1] B. Yang, "A study of inverse short-time Fourier transform,"
+    in Proc. of ICASSP, 2008.
+
+    Examples
+    --------
+    >>> x = np.ones(16)
+    >>> segment_length = 4
+    >>> shift_length = 2
+    >>> segment_length_padded = 4
+    >>> from scipy.signal.windows import boxcar
+    >>> window_function = boxcar
+    >>> original_size = x.shape
+    >>> p = 1
+    >>> x_stft, start_list, stop_list = stft(x, segment_length,
+    ...     segment_length_padded, shift_length, window_function)
+    >>> x_out = istft(x_stft, segment_length, segment_length_padded,
+            start_list, stop_list, original_size, window_function, p)
 
     """
 
