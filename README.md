@@ -13,7 +13,7 @@ This module is based on the algorithm proposed in [1]. The features of this modu
 * zero padding is allowed
 * the ISTFT can be performed using overlap-and-add (p=1) or a least squares approach (p=2).
 
-Additional works that use this stft/istft approach include [2-4].
+Additional works that use this stft/istft approach include [2-5]. If you use this code in work that you publish, please consider citing [1] and at least one of [2-5].
 
 ## References
 
@@ -23,4 +23,6 @@ Additional works that use this stft/istft approach include [2-4].
 
 [3] B Byram et al, "A model and regularization scheme for ultrasonic beamforming clutter reduction, " IEEE UFFC, 62, 11, 2015.
 
-[4] A Luchies et al, "Deep neural networks for ultrasound beamforming," IEEE TMI, 37, 9, 2018.
+[4] A Luchies and B Byram, "Deep neural networks for ultrasound beamforming," IEEE TMI, 37, 9, 2018.
+
+[5] A Luchies and B Byram, "Training improvements for ultrasound beamfomring with deep neural networks," PMB, 64, 4, 2019.
