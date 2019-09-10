@@ -15,7 +15,7 @@ This module is based on the algorithm proposed in [1]. The features of this modu
 
 Additional works that use this stft/istft approach include [2-5].
 
-If you use this code in work that you publish, please consider citing [1] and at least one of [2-5].
+If you use this code in work that you publish, please consider citing at least one of [2-5].
 
 ## References
 
