@@ -12,6 +12,7 @@ This module is based on the algorithm proposed in [1]. The features of this modu
 * overlapping segments are allowed
 * zero padding is allowed
 * the ISTFT can be performed using overlap-and-add (p=1) or a least squares approach (p=2).
+* This module can be dropped into you project. Scipy also includes an stft/istft implementation.
 
 Additional works that use this stft/istft approach include [2-5].
 
